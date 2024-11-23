@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Total_Sales</title>
+    <link rel="stylesheet" href="tSales.css">
+    <script src="tSales.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="admin-profile" style="text-align: center;">
+            <img src="adminlogo.png" alt="Admin Logo" style="width: 68px; height: 66px;">
+            <h4 id="adminEmail" class="email" style="color: white; margin-top: 10px;"></h4>
+        </div>
+    
+        <a href="dashboard.html" class="active">
+            <span class="logos"><i class="fa fa-home"></i> </span>
+            <span class="names_logos">Dashboard</span>
+        </a>
+        <a href="total_sales.html" class="active total-sales">
+            <span class="logos"><i class="fa fa-chart-line"></i></span> 
+            <span class="names_logos">Total Sales</span> 
+        </a>        
+        <a href="top_customer.html" class="active">
+            <span class="logos"><i class="fa fa-users"></i> </span>
+            <span class="names_logos">Top Customer</span>
+        </a>
+        <a href="lineLayout.html" class="active">
+            <span class="logos"><i class="fa fa-book"></i></span>
+            <span class="names_logos">Lined Layout Available Stock</span>
+        </a>
+        <a href="unlinedLayout.html" class="active">
+            <span class="logos"><i class="fa fa-book-open"></i></span>
+            <span class="names_logos">Unlined Layout Available Stock</span>
+        </a>
+        <a href="#" id="logoutLink">
+            <span class="logos"><i class="fa fa-sign-out-alt"></i></span>
+            <span class="names_logos">Log Out</span>
+        </a>
+        <!-- Modal Structure -->
+        <div id="logoutModal" class="modal">
+            <div class="modal-content">
+                <p>Are you sure you want to log out?</p>
+                <button id="confirmLogout">Yes</button>
+                <button id="cancelLogout">No</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- New Main Wrapper for Total Sales -->
+    <div class="main-wrapper">
+
+        <div class="bar-chart-wrapper">
+            <div class="bar-chart-container">
+                <h2>Sales by Product</h2>
+                <canvas id="salesByProductChart"></canvas>
+            </div>
+
+            <!-- Sales by Faculty Bar Graph -->
+            <div class="bar-chart-container">
+                <h2>Sales by Faculty</h2>
+                <canvas id="salesByFacultyChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="total-sales-container">
+            <div class="header-row">
+                <h1>Total Sales</h1>
+                <select id="sortOptions">
+                    <option value="" disabled selected>Sort</option>
+                    <option value="program">Sort by Program (Alphabetically)</option>
+                    <option value="layout">Sort by Layout</option>
+                    <option value="timestamp">Sort by Time</option>
+                    <option value="quantity">Sort by Quantity</option>
+                </select>
+
+                <!-- Date Picker to Filter Sales by Date -->
+                <input type="date" id="salesDateFilter" placeholder="Select Date">
+
+                <button id="generatePDF">Generate PDF</button>
+            </div>
+
+            <div id="buttonContainer">
+                <button id="clearDataButton">Clear Data</button>
+            </div>
+
+            <table id="salesTable">
+                <thead>
+                    <tr>
+                        <th>Program</th>
+                        <th>Layout</th>
+                        <th>Quantity</th>
+                        <th>Timestamp</th>
+                        <th>Total (PHP)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Sales data will be populated here -->
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" style="text-align: right; font-weight: bold;">Total Sales Amount:</td>
+                        <td id="totalSalesAmount">₱0.00</td> <!-- Default to 0.00 -->
+                    </tr>
+                </tfoot>
+            </table>
+            <div id="paginationControls" style="margin-top: 10px;">
+                <button id="prevPage" disabled>Previous</button>
+                <span id="pageInfo">Page 1</span>
+                <button id="nextPage">Next</button>
+            </div>            
+
+        </div>
+    </div>                    
+
+</body>
+</html>

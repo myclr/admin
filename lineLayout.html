@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lined Layout Available Stock</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="lineLayout.css">
+    <script src="lineLayout.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+<body>
+    <div class="sidebar">
+        <div class="admin-profile" style="text-align: center;">
+            <img src="adminlogo.png" alt="Admin Logo" style="width: 68px; height: 66px;">
+            <h4 id="adminEmail" class="email" style="color: white; margin-top: 10px;"></h4>
+        </div>
+
+        <a href="dashboard.html" class="active"><span class="logos"><i class="fa fa-home"></i></span><span class="names_logos">Dashboard</span></a>
+        <a href="total_sales.html" class="active"><span class="logos"><i class="fa fa-chart-line"></i></span><span class="names_logos">Total Sales</span></a>
+        <a href="top_customer.html" class="active"><span class="logos"><i class="fa fa-users"></i></span><span class="names_logos">Top Customer</span></a>
+        <a href="lineLayout.html" class="active lined-layout"><span class="logos"><i class="fa fa-book"></i></span><span class="names_logos">Lined Layout Available Stock</span></a>
+        <a href="unlinedLayout.html" class="active"><span class="logos"><i class="fa fa-book-open"></i></span><span class="names_logos">Unlined Layout Available Stock</span></a>
+        <a href="index.html" id="logoutLink"><span class="logos"><i class="fa fa-sign-out-alt"></i></span><span class="names_logos">Log Out</span></a>
+    </div>
+
+    <div id="logoutModal" class="modal">
+        <div class="modal-content">
+            <h3>ARE YOU SURE YOU WANT TO LOG OUT?</h3>
+            <div class="modal-buttons">
+                <button id="confirmLogout" class="yes">YES</button>
+                <button id="cancelLogout" class="no">NO</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="stock-card">
+            <div class="stock-header">
+              <i class="fa fa-box"></i> Lined Layout Stock
+            </div>
+            <div class="gauge-container">
+              <div class="gauge" id="linedStockGauge"></div>
+            </div>
+            <p class="stock-value">Lined Layout Stock: <span id="linedStockCount">0</span></p>
+            <div class="threshold-indicator" id="linedThresholdIndicator" style="display: none;">
+              Restock Needed!
+            </div>
+        </div>   
+            <div class="chart-container">
+              <canvas id="linedStockChart"></canvas>
+            </div>                    
+
+                <div class="lined-restock-container">
+                    <h3>Lined Layout Restock</h3>
+                    <div class="lined-restock-input-group">
+                        <label for="linedStockInput">Lined Stock:</label>
+                        <input type="number" id="linedStockInput" min="0" placeholder="Enter new stock">
+                    </div>
+                    <button id="linedRestockButton">Update Stock</button>
+                </div>                        
+        
+    </div>
+
+    <script>
+        // Fetch and display lined layout stock from localStorage
+        const linedStock = localStorage.getItem('linedStockCount') || 0; // Default to 0 if not found
+        document.getElementById('linedStockCount').textContent = linedStock;
+    
+        // Function to update Lined stock display and chart
+        function updateLinedStock(stockCount) {
+            document.getElementById('linedStockCount').innerText = stockCount;
+            const thresholdIndicator = document.getElementById('linedThresholdIndicator');
+            thresholdIndicator.style.display = stockCount <= 20 ? 'block' : 'none';
+            thresholdIndicator.style.color = stockCount <= 10 ? 'red' : 'orange';
+    
+            // Update stock in the chart
+            linedStockChart.data.datasets[0].data[0] = stockCount;
+            linedStockChart.update();
+        }
+    
+        // Set up Chart.js for Lined Layout
+        const linedCtx = document.getElementById('linedStockChart').getContext('2d');
+        const linedStockChart = new Chart(linedCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Current Stock', 'Restock Threshold'],
+                datasets: [{
+                    label: 'Lined Layout Stock',
+                    data: [linedStock, 20], // Set stockCount from localStorage
+                    backgroundColor: ['rgba(54, 162, 235, 0.5)', 'rgba(255, 206, 86, 0.5)'],
+                    borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)'],
+                    borderWidth: 1
+                }]
+            },
+            options: { scales: { y: { beginAtZero: true } } }
+        });
+    
+        // Update the lined stock chart based on localStorage
+        updateLinedStock(linedStock);
+    
+    
+        // updated on NOV.11
+        document.getElementById("linedRestockButton").addEventListener("click", function () {
+        const newLinedStock = parseInt(document.getElementById("linedStockInput").value, 10);
+    
+        if (!isNaN(newLinedStock) && newLinedStock >= 0) {
+            restockLinedLayout(newLinedStock);
+        } else {
+            alert("Please enter a valid number for stock quantity.");
+        }
+    });
+    
+        function restockLinedLayout(newLinedStock) {
+            let currentLinedStock = parseInt(localStorage.getItem('linedStockCount') || '0', 10);
+    
+            // Check if total stock exceeds 40 pieces
+            if (currentLinedStock + newLinedStock > 40) {
+                alert("Maximum stock for Lined Layout is 40 pieces. Cannot add more.");
+                return;
+            }
+    
+            currentLinedStock += newLinedStock;
+            localStorage.setItem('linedStockCount', currentLinedStock);
+    
+            addRestockNotification("Lined Layout Restock");
+            updateLinedStockDisplay();
+        }
+    
+        function addRestockNotification(stockType) {
+            const message = `${stockType} completed at ${new Date().toLocaleString()}`;
+            const storedNotifications = JSON.parse(localStorage.getItem('notifications')) || [];
+            storedNotifications.push({ message, time: new Date().toLocaleString() });
+            localStorage.setItem('notifications', JSON.stringify(storedNotifications));
+            updateBadgeCount();
+        }
+    
+        function updateLinedStockDisplay() {
+            const linedStock = localStorage.getItem('linedStockCount');
+            document.getElementById('linedStockDisplay').textContent = `Lined Layout: ${linedStock || 0}`;
+        }
+    
+    
+    // updated on NOV. 13
+    // Function to update the Lined Layout Stock and Gauge
+    function updateLinedStock() {
+        const maxStock = 40; // Maximum stock limit for Lined Layout
+        let linedStock = parseInt(localStorage.getItem('linedStockCount')) || 0; // Get current stock from localStorage
+        
+        // Update the displayed stock count
+        document.getElementById('linedStockCount').textContent = linedStock;
+
+        // Calculate the percentage of remaining stock
+        const stockPercentage = (linedStock / maxStock) * 100;
+
+        // Update the gauge
+        const gauge = document.getElementById('linedStockGauge');
+        gauge.style.width = stockPercentage + '%';  // Adjust the width based on stock percentage
+
+        // Show or hide the restock indicator based on stock
+        const thresholdIndicator = document.getElementById('linedThresholdIndicator');
+        if (linedStock <= 20) {
+            thresholdIndicator.style.display = 'block';  // Show restock warning
+        } else {
+            thresholdIndicator.style.display = 'none';  // Hide restock warning
+        }
+
+        // Add a notification if restock is needed
+        if (linedStock <= 20) {
+            const currentTime = new Date().toLocaleString();
+            addNotification(`Restock needed for Lined Layout - Low stock (${linedStock} remaining)`, currentTime);
+        }
+    }
+
+    // Function to update the badge count
+    function updateBadgeCount() {
+        const badge = document.getElementById("notification-badge");
+        const storedNotifications = JSON.parse(localStorage.getItem('notifications')) || [];
+        const notificationCount = storedNotifications.filter(notification => !notification.viewed).length; // Count unread notifications
+
+        if (notificationCount > 0) {
+            badge.style.display = "inline-block";
+            badge.textContent = notificationCount;
+        } else {
+            badge.style.display = "none";
+        }
+    }
+
+    // Function to add a notification (existing function)
+    function addNotification(message, time) {
+        let storedNotifications = JSON.parse(localStorage.getItem('notifications')) || [];
+        
+        // Add the notification object to the list
+        storedNotifications.push({ message, time, viewed: false });
+
+        // Sort notifications by time before saving
+        storedNotifications.sort((a, b) => new Date(b.time) - new Date(a.time));
+
+        // Save to localStorage
+        localStorage.setItem('notifications', JSON.stringify(storedNotifications));
+
+        // Update the notification list on the page
+        loadNotifications();
+        updateBadgeCount();
+    }
+
+// Initialize or update stock on page load
+window.addEventListener("load", function () {
+    updateLinedStock();  // Update Lined Layout stock
+    updateBadgeCount();  // Update badge count for notifications
+});
+    
+        // email updated on NOV.6
+        // Get the admin email from localStorage
+        const adminEmail = localStorage.getItem('adminEmail') || 'admin@example.com';
+    
+        // Display the admin email in the placeholder element
+        document.getElementById('adminEmail').textContent = adminEmail;
+        </script>    
+
+</body>
+</html>

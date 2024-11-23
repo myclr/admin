@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrator</title>
+    <script type="module" src="adminLogin.js" defer></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #343a40; /* Darker background color */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #f8f9fa; /* Lighter text color for contrast */
+        }
+
+        #container {
+            width: 100%;
+            max-width: 650px;
+            background-color: #ffffff; /* Light container color */
+            padding: 30px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            text-align: center; /* Center content */
+        }
+
+        #header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        #slsulogo, #celogo, #icpep {
+            height: 60px;
+            margin: 0 15px;
+        }
+
+        #front-text {
+            font-size: 28px;
+            font-weight: bold;
+            color: #003366; /* University theme color */
+            margin-bottom: 30px;
+        }
+
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .input-container {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 12px;
+            margin-bottom: 15px;
+            background-color: #f8f9fa;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-container:focus-within {
+            border-color: #003366; /* Highlight on focus */
+        }
+
+        #icon {
+            font-size: 20px;
+            color: #666;
+            margin-right: 10px;
+        }
+
+        .input-field {
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 16px;
+            padding: 8px;
+            color: #495057; /* Dark text color */
+        }
+
+        .forgot-password {
+            margin: 10px 0;
+        }
+
+        .forgot-password a {
+            text-decoration: none;
+            font-size: 14px;
+            color: #007bff; /* Bootstrap primary color */
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .login-button, .create-button {
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffffff;
+            background-color: #003366; /* Primary button color */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-button:hover, .create-button:hover {
+            background-color: #0056b3; /* Darker on hover */
+        }
+
+        .create-button {
+            background-color: #005cbf; /* Different color for create button */
+        }
+
+        .create-button:hover {
+            background-color: #004da8; /* Darker on hover */
+        }
+
+        .error-message {
+            color: #ff4d4d; /* Error message color */
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        @media screen and (max-width: 768px) {
+            #header {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #slsulogo, #celogo, #icpep {
+                height: 45px;
+            }
+
+            #front-text {
+                font-size: 28px;
+            }
+
+            .login-container {
+                max-width: 90%;
+            }
+        }
+
+        .forgot-password-link {
+        color: #007bff;
+        font-size: 14px;
+        text-decoration: none;
+        }
+
+        .forgot-password-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body onload="clearFields()">
+    <div id="container">
+        <div id="header">
+            <img id="celogo" src="celogo.png" alt="CE Logo">
+            <img id="slsulogo" src="slsu.png" alt="SLSU Logo">
+            <img id="icpep" src="icpeplogo.png" alt="ICPE Logo">
+        </div>
+ 
+        <div id="front-text">Welcome, Admin!</div>
+        <div class="login-container">
+            <div class="input-container">
+                <span id="icon">&#128100;</span>
+                <input type="text" id="loginUsername" placeholder="Email" class="input-field" onfocus="removePlaceholder(this)" onblur="restorePlaceholder(this, 'Email')">
+            </div>
+            <div id="iconpass" class="input-container">
+                <span id="icon">&#128274;</span>
+                <input type="password" id="loginPassword" placeholder="Password" class="input-field" onfocus="removePlaceholder(this)" onblur="restorePlaceholder(this, 'Password')">
+            </div>
+        
+            <div class="forgot-password">
+                <a href="forgotpass.html" class="forgot-password-link">Forgot Password?</a>
+            </div>
+
+            <div class="button-container">
+                <button class="login-button" id="loginButton">LOGIN</button>
+                <a href="createAcc.html"><button class="create-button">SIGN UP</button></a>
+            </div>
+            <div id="loginError" class="error-message"></div>
+        </div>
+    </div>
+</body>
+</html>

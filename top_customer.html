@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Customer</title>
+    <link rel="stylesheet" href="tCustomer.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="tCustomers.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />  
+</head>
+
+<body>
+    <!-- Sidebar Section -->
+    <div class="sidebar">
+        <div class="admin-profile" style="text-align: center;">
+            <img src="adminlogo.png" alt="Admin Logo" style="width: 68px; height: 66px;">
+            <h4 id="adminEmail" class="email" style="color: white; margin-top: 10px;"></h4>
+        </div>
+
+        <!-- Sidebar Links -->
+        <a href="dashboard.html" class="active">
+            <span class="logos"><i class="fa fa-home"></i></span> 
+            <span class="names_logos">Dashboard</span>
+        </a>
+        <a href="total_sales.html" class="active">
+            <span class="logos"><i class="fa fa-chart-line"></i></span> 
+            <span class="names_logos">Total Sales</span> 
+        </a>
+        <a href="top_customer.html" class="active">
+            <span class="logos"><i class="fa fa-users"></i></span> 
+            <span class="names_logos">Top Customer</span>
+        </a>
+        <a href="lineLayout.html" class="active">
+            <span class="logos"><i class="fa fa-book"></i></span>      
+            <span class="names_logos">Lined Layout Available Stock</span>
+        </a>
+        <a href="unlinedLayout.html" class="active">
+            <span class="logos"><i class="fa fa-book-open"></i></span>
+            <span class="names_logos">Unlined Layout Available Stock</span> 
+        </a>
+        <a href="#" id="logoutLink">
+            <span class="logos"><i class="fa fa-sign-out-alt"></i></span>
+            <span class="names_logos">Log Out</span>
+        </a>
+        <!-- Modal Structure -->
+        <div id="logoutModal" class="modal">
+            <div class="modal-content">
+                <p>Are you sure you want to log out?</p>
+                <button id="confirmLogout">Yes</button>
+                <button id="cancelLogout">No</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="chart-container">
+            <h1>Top Customer</h1>
+                <h2 id="topProgramLabel"> <span id="topProgramName">N/A</span></h2>
+                <div id="topProgramContainer" class="top-program">
+                <p id="topProgramQuantity">Quantity Purchased: <span id="topProgramQty">0</span></p>
+                <p id="topProgramSales">Total Sales: ₱<span id="topProgramTotalSales">0</span></p>
+            </div>
+            <canvas id="productSalesChart" width="600" height="240"></canvas>
+        </div>
+    </div>   
+    
+    <script>
+        // email updated on NOV.6
+        // Get the admin email from localStorage
+        const adminEmail = localStorage.getItem('adminEmail') || 'admin@example.com';
+
+        // Display the admin email in the placeholder element
+        document.getElementById('adminEmail').textContent = adminEmail;
+    </script>
+    
+</body>
+</html>

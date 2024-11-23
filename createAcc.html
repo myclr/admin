@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create an Account</title>
+    <link rel="stylesheet" href="createAcc.css">
+    
+</head>
+<body>
+    <div id="container">
+        <div id="header">
+            <img id="celogo" src="celogo.png" alt="CE Logo">
+            <img id="slsulogo" src="slsu.png" alt="SLSU Logo">
+            <img id="icpep" src="icpeplogo.png" alt="ICPE Logo">
+        </div>
+        <h1>CREATE ACCOUNT</h1>
+        <p style="color: black;">Already have an account? <a href="adminLogin.html">Log In</a></p>
+        <form id="signUpForm">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                <div class="error-message" id="error-message">Please enter a valid email address.</div>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            <div class="form-group">
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required>
+            </div>
+            <button type="submit" class="btn">SIGN UP</button>
+        </form>
+    </div>
+
+    <script type="module">
+        // Import Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+                apiKey: "AIzaSyDqxo3IrnvOX2_9c2fv96iDeq1c8X4AE94",
+                authDomain: "fir-v10-15166.firebaseapp.com",
+                databaseURL: "https://fir-v10-15166-default-rtdb.firebaseio.com",
+                projectId: "fir-v10-15166",
+                storageBucket: "fir-v10-15166.appspot.com",
+                messagingSenderId: "199033930521",
+                appId: "1:199033930521:web:48501e8ea61ff8c5413b88"
+            };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+
+        document.getElementById('signUpForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+
+        // Check if the email domain is valid
+        const validDomain = "bernadeznarhiza@gmail.com";
+        if (!email.endsWith(validDomain)) {
+            alert("Only authorized email addresses are allowed.");
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            alert("Passwords do not match.");
+            return;
+        }
+
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            alert('Account created successfully. You can now log in.');
+            window.location.href = "adminLogin.html"; // Redirect to login page
+        } catch (error) {
+            console.error("Error creating user:", error);
+            
+            if (error.code === 'auth/email-already-in-use') {
+                alert('Email Address Already Exists!');
+            } else if (error.code === 'auth/invalid-email') {
+                alert('Invalid email format.');
+            } else if (error.code === 'auth/weak-password') {
+                alert('Password should be at least 6 characters.');
+            } else {
+                alert('Error: ' + error.message);
+            }
+        }
+    });
+
+    </script>
+</body>
+</html>
